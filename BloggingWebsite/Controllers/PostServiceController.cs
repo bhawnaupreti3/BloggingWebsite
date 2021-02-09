@@ -41,10 +41,18 @@ namespace BloggingWebsite.Controllers
         public IActionResult Get()
         {
             _logger.LogInformation("Searching for Post");
-            var posts = _postService.GetAllBlogs();
+            try
+            {
+                var posts = _postService.GetAllBlogs();
 
-            _logger.LogInformation("Post Searching Complete");
-            return Ok(posts);
+                _logger.LogInformation("Post Searching Complete");
+                return Ok(posts);
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
+
         }
 
         #endregion
@@ -57,23 +65,31 @@ namespace BloggingWebsite.Controllers
         /// <param name="post"></param>
         /// <returns>status of operation returned</returns>
         [HttpPost]
-        public async Task<IActionResult> Add([FromBody]Post post)
+        public async Task<IActionResult> Add([FromBody] Post post)
         {
             _logger.LogInformation("Adding Post to blogging website");
-            
-            _postService.Add(post);
-            if (await _postService.SaveChangesAsync())
+
+            try
             {
-                _logger.LogInformation("Post added successfully to blogging website");
-                return Ok();
+                _postService.Add(post);
+                if (await _postService.SaveChangesAsync())
+                {
+                    _logger.LogInformation("Post added successfully to blogging website");
+                    return Ok();
+                }
+                else
+                {
+                    _logger.LogInformation("Post could not be added successfully blogging website");
+                    return NotFound();
+                }
             }
-            else
+            catch (Exception)
             {
-                _logger.LogInformation("Post could not be added successfully blogging website");
                 return NotFound();
             }
-                
-                
+
+
+
         }
 
         #endregion
@@ -85,11 +101,31 @@ namespace BloggingWebsite.Controllers
         /// </summary>
         /// <param name="id"></param>
         [HttpDelete("{id}")]
-        public void Delete(Guid id)
+        public async Task<IActionResult> Delete(Guid id)
         {
             _logger.LogInformation("Removing Post from blogging website");
-            _postService.Delete(id);
+            try
+            {
+                _postService.Delete(id);
+                if (await _postService.SaveChangesAsync())
+                {
+                    _logger.LogInformation("Post deleted successfully to blogging website");
+                    return Ok();
+                }
+                else
+                {
+                    _logger.LogInformation("Post could not be added successfully blogging website");
+                    return NotFound();
+                }
+            }
+            catch (Exception)
+            {
+                return NotFound();
+            }
         }
         #endregion
     }
+
 }
+
+
