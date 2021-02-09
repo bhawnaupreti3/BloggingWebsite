@@ -6,6 +6,10 @@ using System.Threading.Tasks;
 
 namespace BloggingWebsite.Service
 {
+
+    /// <summary>
+    /// Post Service interface implemented
+    /// </summary>
     public class PostService : IPostService
     {
         private AppDbContext _ctx;
@@ -43,6 +47,10 @@ namespace BloggingWebsite.Service
         {
             return _ctx.Posts.ToList();
         }
+
+        /// <summary>
+        /// actual db change takes place here
+        /// </summary>
 
         public async Task<bool> SaveChangesAsync()
         {

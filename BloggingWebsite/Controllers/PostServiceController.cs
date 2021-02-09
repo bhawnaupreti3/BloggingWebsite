@@ -6,13 +6,24 @@ using System.Threading.Tasks;
 
 namespace BloggingWebsite.Controllers
 {
+    /// <summary>
+    /// Controller for Post Http calls
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class PostServiceController : ControllerBase
     {
-        
+
+        #region private
         private readonly ILogger<PostServiceController> _logger;
         private readonly IPostService _postService;
+        #endregion
+
+        /// <summary>
+        /// instance for post service
+        /// </summary>
+        /// <param name="logger">logger dependecy passed</param>
+        /// <param name="postService">post service dependecy passed</param>
         public PostServiceController(ILogger<PostServiceController> logger, IPostService postService)
         {
             _logger = logger;
@@ -20,6 +31,12 @@ namespace BloggingWebsite.Controllers
 
         }
 
+        #region get post
+
+        /// <summary>
+        /// Fetch list of all posts
+        /// </summary>
+        /// <returns>return posts present</returns>
         [HttpGet]
         public IActionResult Get()
         {
@@ -30,6 +47,15 @@ namespace BloggingWebsite.Controllers
             return Ok(posts);
         }
 
+        #endregion
+
+        #region add/update post
+
+        /// <summary>
+        /// Add/Update Post
+        /// </summary>
+        /// <param name="post"></param>
+        /// <returns>status of operation returned</returns>
         [HttpPost]
         public async Task<IActionResult> Add([FromBody]Post post)
         {
@@ -50,11 +76,20 @@ namespace BloggingWebsite.Controllers
                 
         }
 
+        #endregion
+
+        #region delete post
+
+        /// <summary>
+        /// Deletes post
+        /// </summary>
+        /// <param name="id"></param>
         [HttpDelete("{id}")]
         public void Delete(Guid id)
         {
             _logger.LogInformation("Removing Post from blogging website");
             _postService.Delete(id);
         }
+        #endregion
     }
 }

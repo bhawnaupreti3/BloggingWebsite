@@ -4,6 +4,9 @@ using System.Threading.Tasks;
 
 namespace BloggingWebsite.Service
 {
+    /// <summary>
+    /// Post Service Interface
+    /// </summary>
     public interface IPostService
     {
 
